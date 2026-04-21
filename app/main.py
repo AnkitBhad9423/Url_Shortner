@@ -1,0 +1,36 @@
+# app/main.py
+
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from app.database import connect_mongo, close_mongo, connect_redis, close_redis
+from app.routes import router
+
+
+# ── Lifespan (replaces @app.on_event which is now deprecated) ────────────────
+# This runs ONCE when the app starts and ONCE when it shuts down
+# Think of it like Django's AppConfig.ready() but for async connections
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup
+    await connect_mongo()
+    await connect_redis()
+    yield                   # app runs here
+    # shutdown
+    await close_mongo()
+    await close_redis()
+
+
+app = FastAPI(
+    title="URL Shortener",
+    description="A simple URL shortener built with FastAPI + MongoDB + Redis",
+    version="1.0.0",
+    lifespan=lifespan
+)
+
+app.include_router(router)
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
