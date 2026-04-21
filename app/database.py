@@ -36,8 +36,21 @@ redis_client: Redis = None
 
 async def connect_redis():
     global redis_client
-    redis_client = Redis.from_url(REDIS_URL, decode_responses=True, ssl_cert_reqs=None)
-    print("✅ Redis connected")
+    try:
+        import ssl
+        ssl_context = ssl.create_default_context()
+        ssl_context.check_hostname = False
+        ssl_context.verify_mode = ssl.CERT_NONE
+
+        redis_client = Redis.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            ssl_context=ssl_context       # ✅ new way to handle TLS
+        )
+        await redis_client.ping()
+        print("✅ Redis connected")
+    except Exception as e:
+        print(f"❌ Redis connection failed: {e}")
 
 async def close_redis():
     await redis_client.aclose()
