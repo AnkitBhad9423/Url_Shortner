@@ -67,7 +67,7 @@ async def shorten_url(payload: ShortenRequest):
 # ── GET /{short_code} ─────────────────────────────────────────────────────────
 # app/routes.py
 
-@router.get("/{short_code}")
+@router.get("/r/{short_code}")
 async def redirect_url(short_code: str):
     db    = get_db()
     redis = get_redis()
