@@ -1,6 +1,7 @@
 # app/main.py
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import connect_mongo, close_mongo, connect_redis, close_redis
 from app.routes import router
@@ -27,10 +28,41 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],       # for dev/learning — lock this down in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(router)
 
 
 @app.get("/health")
 async def health():
-    return {"status": "ok"}
+    from app.database import get_db, get_redis
+
+    status = {"app": "ok", "mongodb": "unknown", "redis": "unknown"}
+
+    try:
+        db = get_db()
+        if db is None:
+            status["mongodb"] = "❌ not connected"
+        else:
+            await db.client.admin.command("ping")
+            status["mongodb"] = "✅ connected"
+    except Exception as e:
+        status["mongodb"] = f"❌ {str(e)}"
+
+    try:
+        redis = get_redis()
+        if redis is None:
+            status["redis"] = "❌ not connected"
+        else:
+            await redis.ping()
+            status["redis"] = "✅ connected"
+    except Exception as e:
+        status["redis"] = f"❌ {str(e)}"
+
+    return status

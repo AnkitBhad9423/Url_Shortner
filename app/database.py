@@ -37,15 +37,14 @@ redis_client: Redis = None
 async def connect_redis():
     global redis_client
     try:
-        import ssl
-        ssl_context = ssl.create_default_context()
-        ssl_context.check_hostname = False
-        ssl_context.verify_mode = ssl.CERT_NONE
+        # import ssl
+        # ssl_context = ssl.create_default_context()
+        # ssl_context.check_hostname = False
+        # ssl_context.verify_mode = ssl.CERT_NONE
 
         redis_client = Redis.from_url(
             REDIS_URL,
-            decode_responses=True,
-            ssl_context=ssl_context       # ✅ new way to handle TLS
+            decode_responses=True
         )
         await redis_client.ping()
         print("✅ Redis connected")
