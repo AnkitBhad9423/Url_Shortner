@@ -42,7 +42,7 @@ async def shorten_url(payload: ShortenRequest, request: Request):
             short_code = existing["short_code"]
             return ShortenResponse(
                 short_code=short_code,
-                short_url=f"{BASE_URL}/{short_code}",
+                short_url=f"{BASE_URL}/ch/{short_code}",
                 long_url=long_url
             )
     except Exception as e:
