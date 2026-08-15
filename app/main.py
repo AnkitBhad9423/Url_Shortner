@@ -41,7 +41,11 @@ app = FastAPI(
 )
 origins=[
     "http://localhost:5173",                    # local dev
+    "https://url-shortner-88mk.onrender.com",  # render (keep for now)
 ]
+vercel_url = os.getenv("FRONTEND_URL")
+if vercel_url:
+    origins.append(vercel_url)
 app.add_middleware(CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
