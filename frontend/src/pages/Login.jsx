@@ -42,6 +42,8 @@ export default function Login() {
 
       login(access_token, { name, email: form.email, role });
 
+      const saved = localStorage.getItem("token");
+      console.log("Token saved before navigate:", saved ? "✅" : "❌");
       // admin goes to /admin, regular user goes to /dashboard
       navigate(role === "admin" ? "/admin" : "/dashboard", { replace: true });
     } catch (err) {

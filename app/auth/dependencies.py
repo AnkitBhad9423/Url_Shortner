@@ -11,6 +11,7 @@ async def get_current_user(authorization: str = Header(None)):
 
     Client must send:  Authorization: Bearer <token>
     """
+    print("Authorization header:", authorization)  # Debugging line
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(
             status_code=401,

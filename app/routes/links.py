@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
+BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:8000")
 
 router = APIRouter(tags=["links"])
 
@@ -134,13 +134,14 @@ async def redirect_url(short_code: str, request: Request):
 # ── GET /api/links — user sees only their own links ───
 @router.get("/api/links")
 async def get_my_links(current_user: dict = Depends(get_current_user)):
+    print("Current user:", current_user)  # Debugging line
     db = get_db()
 
     links = await db.urls.find(
         {"user_id": current_user["_id"]},
         {"_id": 0}
     ).to_list(length=100)
-
+    print("Retrieved links:", links)  # Debugging line
     for link in links:
         link["click_count"] = await db.clicks.count_documents(
             {"short_code": link["short_code"]}

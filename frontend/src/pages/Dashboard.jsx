@@ -16,6 +16,11 @@ export default function Dashboard() {
 
   // fetch user's links on mount
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login", { replace: true });
+      return;
+    }
     fetchLinks();
   }, []);
 
@@ -25,7 +30,9 @@ export default function Dashboard() {
       const res = await client.get("/api/links");
       setLinks(res.data.links || []);
     } catch (err) {
-      setError("failed to load links. refresh and try again.");
+      if (err.response?.status !== 401) {
+        setError("failed to load links. refresh and try again.");
+      }
     } finally {
       setLoading(false);
     }
