@@ -42,7 +42,7 @@ async def shorten_url(payload: ShortenRequest, request: Request):
             short_code = existing["short_code"]
             return ShortenResponse(
                 short_code=short_code,
-                short_url=f"{BASE_URL}/{short_code}",
+                short_url=f"{BASE_URL}/jstlernnganks/{short_code}",
                 long_url=long_url
             )
     except Exception as e:
@@ -69,7 +69,7 @@ async def shorten_url(payload: ShortenRequest, request: Request):
                 })
                 return ShortenResponse(
                     short_code=short_code,
-                    short_url=f"{BASE_URL}/{short_code}",
+                    short_url=f"{BASE_URL}/jstlernnganks/{short_code}",
                     long_url=long_url
                 )
             # else collision – continue loop
@@ -81,7 +81,7 @@ async def shorten_url(payload: ShortenRequest, request: Request):
 # ── GET /{short_code} ─────────────────────────────────────────────────────────
 # app/routes.py
 
-@router.get("/ch/{short_code}")
+@router.get("/jstlernnganks/{short_code}")
 async def redirect_url(short_code: str, request: Request):
     db    = get_db()
     redis = get_redis()
