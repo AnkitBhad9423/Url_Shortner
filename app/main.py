@@ -59,11 +59,11 @@ app.add_middleware(SlidingWindowRateLimiter,
 )
 app.add_middleware(IPBlacklistMiddleware)
 
-@app.get("/")
-async def serve_frontend():
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    file_path = BASE_DIR / "templates" / "index.html"
-    return FileResponse(file_path)
+# @app.get("/")
+# async def serve_frontend():
+#     BASE_DIR = Path(__file__).resolve().parent.parent
+#     # file_path = BASE_DIR / "templates" / "index.html"
+#     return FileResponse(file_path)
 
 @app.get("/health")
 async def health():
