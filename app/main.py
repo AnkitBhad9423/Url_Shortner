@@ -5,10 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import connect_mongo, close_mongo, connect_redis, close_redis
 from app.middleware import IPBlacklistMiddleware, SlidingWindowRateLimiter
-from app.routes import router
+
 from fastapi.responses import FileResponse
 import os
 from pathlib import Path
+
+from app.routes.auth import router as auth_router
+from app.routes.links import router as links_router
+from app.routes.analytics import router as analytics_router
+from app.routes.admin import router as admin_router
+
+
 # ── Lifespan (replaces @app.on_event which is now deprecated) ────────────────
 # This runs ONCE when the app starts and ONCE when it shuts down
 # Think of it like Django's AppConfig.ready() but for async connections
@@ -28,10 +35,15 @@ app = FastAPI(
     title="URL Shortener",
     description="A simple URL shortener built with FastAPI + MongoDB + Redis",
     version="2.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/docs" if os.getenv("ENV") != "production" else None,
+    redoc_url=None
 )
+origins=[
+    "http://localhost:5173",                    # local dev
+]
 app.add_middleware(CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -74,4 +86,7 @@ async def health():
 
 
 
-app.include_router(router)
+app.include_router(auth_router)
+app.include_router(links_router)
+app.include_router(analytics_router)
+app.include_router(admin_router)
