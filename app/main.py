@@ -42,6 +42,8 @@ app = FastAPI(
 origins=[
     "http://localhost:5173",                    # local dev
     "https://url-shortner-88mk.onrender.com",  # render (keep for now)
+    "https://url-shortner-five-sepia.vercel.app", #vercel url (frontend)
+    "https://url-shortner-git-main-ankit-bhads-projects.vercel.app"
 ]
 vercel_url = os.getenv("FRONTEND_URL")
 if vercel_url:
