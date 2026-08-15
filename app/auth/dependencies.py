@@ -20,12 +20,29 @@ async def get_current_user(authorization: str = Header(None)):
 
     token = authorization.split(" ")[1]
     payload = decode_token(token)
+    print("=== AUTH DEBUG ===")
+    print("Token received:", token)
+
+    try:
+        payload = decode_token(token)
+        print("Decoded payload:", payload)
+    except Exception as e:
+        print("JWT DECODE FAILED:", repr(e))
+        raise
 
     db = get_db()
     user = await db.users.find_one({"_id": payload["sub"]})
+    try:
+        user = await db.users.find_one({"_id": payload["sub"]})
+        print("User lookup ID:", payload["sub"])
+        print("User found:", user is not None)
+    except Exception as e:
+        print("DB LOOKUP FAILED:", repr(e))
+        raise
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
 
+    print("Current user:", user)
     return user   # this gets injected into your route function
 
 
