@@ -2,7 +2,8 @@
 import { useState } from "react";
 import client from "../api/client";
 
-const BACKEND_URL = import.meta.env.BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+console.log("LinkRow.jsx - BACKEND_URL:", BACKEND_URL);
 export default function LinkRow({ link, onDelete }) {
   const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState(false);

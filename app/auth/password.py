@@ -8,9 +8,9 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(plain: str) -> str:
     """Hash a plain password. Store this in DB."""
-    print("Type:", type(plain))
-    print("Length:", len(plain))
-    print("Value preview:", plain[:50])
+    # print("Type:", type(plain))
+    # print("Length:", len(plain))
+    # print("Value preview:", plain[:50])
     return pwd_context.hash(plain)
 
 

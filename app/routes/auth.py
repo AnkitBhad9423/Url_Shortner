@@ -31,7 +31,7 @@ async def register(payload: RegisterRequest):
         raise HTTPException(status_code=409, detail="Email already registered")
 
     # never store plain password
-    print("Password length:", len(payload.password))
+    # print("Password length:", len(payload.password))
     user = {
         "_id":       str(ObjectId()),
         "email":     payload.email,
